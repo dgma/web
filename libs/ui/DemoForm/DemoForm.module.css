@@ -1,0 +1,29 @@
+.root {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.title {
+  padding-bottom: 10px;
+  text-align: center;
+}
+
+.group {
+  display: flex;
+  padding: 10px;
+}
+
+.row {
+  display: flex;
+  flex-direction: column;
+}
+
+.input {
+  text-align: center;
+  min-width: 250px;
+}
+
+.btn {
+  flex-grow: 1;
+}
