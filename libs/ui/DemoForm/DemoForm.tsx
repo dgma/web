@@ -6,6 +6,7 @@ import { ethers } from 'ethers'
 import Button from '@/libs/ui/Button';
 import { useWallet } from '@/feature/wallet'
 import { useNetworkProvider } from '@/libs/network'
+import { toBigNumERC20, fromBigNumERC20 } from '@/libs/decimals';
 
 import deploymentLock from '@dgma/protocol/deployment-lock.json'
 import abi from '@dgma/protocol/abi/contracts/app/facets/minter.sol/MinterFacet.json'
@@ -31,7 +32,10 @@ const DemoForm: FC<DemoFormProps> = ({setTransactionPending, isTransactionPendin
 
   const deposit = async (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    // console.log(depositInput?.current?.value);
+    const val = depositInput?.current?.value;
+    console.log('deposit input', val);
+    console.log('deposit in bigint', toBigNumERC20(val));
+    console.log('deposit in bigint.toString', toBigNumERC20(val).toString());
   }
   const withdraw = async (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
