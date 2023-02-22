@@ -4,12 +4,11 @@ import { MouseEvent, useRef, useCallback, useMemo } from 'react';
 import { ethers } from 'ethers'
 
 import Button from '@/libs/ui/Button';
-import { useWallet } from '@/feature/wallet'
 import { useNetworkProvider, GetProvider } from '@/libs/network'
-import { toBigNumERC20, fromBigNumERC20 } from '@/libs/decimals';
+import { toBigNumERC20 } from '@/libs/decimals';
 
 import deploymentLock from '@dgma/protocol/deployment-lock.json'
-import minterFacetAbi from '@dgma/protocol/abi/contracts/app/facets/minter.sol/MinterFacet.json'
+import vaultFacetAbi from '@dgma/protocol/abi/contracts/app/facets/vault.sol/VaultFacet.json'
 import styles from './DemoForm.module.css';
 
 const appDiamondAddress = deploymentLock.rabbit.AppDiamond.address
@@ -25,10 +24,8 @@ const getSigner = async (getProvider: GetProvider) => (await getProvider()).getS
 const DemoForm: FC<DemoFormProps> = ({setTransactionPending, isTransactionPending}) => {
 
   const { getProvider } = useNetworkProvider();
-  const { currentAccount } = useWallet();
 
   const depositInput = useRef<HTMLInputElement>(null);
-  const withdrawInput = useRef<HTMLInputElement>(null);
   const mintInput = useRef<HTMLInputElement>(null);
   const burnInput = useRef<HTMLInputElement>(null);
 
@@ -44,32 +41,35 @@ const DemoForm: FC<DemoFormProps> = ({setTransactionPending, isTransactionPendin
   const deposit = async (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     const val = depositInput?.current?.value;
-    // const signer = await getSigner(getProvider);
-    // const contract = new ethers.Contract(appDiamondAddress, vaultFacetAbi, signer);
-    // handleLoading(await contract.deposit(toBigNumERC20(val)))
-    console.log('deposit input', val);
-    console.log('deposit in bigint', toBigNumERC20(val));
-    console.log('deposit in bigint.toString', toBigNumERC20(val).toString());
+    const signer = await getSigner(getProvider);
+    const contract = new ethers.Contract(appDiamondAddress, vaultFacetAbi, signer);
+    if (val) {
+      handleLoading(await contract.deposit({value: ethers.utils.parseEther(val)}))
+    }
   }
   const withdraw = async (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    // const val = depositInput?.current?.value;
-    // const signer = await getSigner(getProvider);
-    // const contract = new ethers.Contract(appDiamondAddress, vaultFacetAbi, signer);
-    // handleLoading(await contract.withdraw(toBigNumERC20(val)))
+    const signer = await getSigner(getProvider);
+    const contract = new ethers.Contract(appDiamondAddress, vaultFacetAbi, signer);
+    handleLoading(await contract.withdraw())
   }
   const mint = async (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
+    const val = depositInput?.current?.value;
     const signer = await getSigner(getProvider);
-    const contract = new ethers.Contract(appDiamondAddress, minterFacetAbi, signer)
-    handleLoading(await contract.mint(tokenAddress, currentAccount))
+    const contract = new ethers.Contract(appDiamondAddress, vaultFacetAbi, signer)
+    if (val) {
+      handleLoading(await contract.mint(toBigNumERC20(val), tokenAddress))
+    }
   }
   const burn = async (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    // const val = depositInput?.current?.value;
-    // const signer = await getSigner(getProvider);
-    // const contract = new ethers.Contract(appDiamondAddress, vaultFacetAbi, signer);
-    // handleLoading(await contract.burn(tokenAddress, toBigNumERC20(val)))
+    const val = depositInput?.current?.value;
+    const signer = await getSigner(getProvider);
+    const contract = new ethers.Contract(appDiamondAddress, vaultFacetAbi, signer);
+    if (val) {
+      handleLoading(await contract.burn(toBigNumERC20(val), tokenAddress))
+    }
   }
 
   return (
@@ -94,11 +94,10 @@ const DemoForm: FC<DemoFormProps> = ({setTransactionPending, isTransactionPendin
           </div>
           <div className={styles.group}>
             <input 
-              type="number" 
-              placeholder="amount to withdraw, PIGMY" 
+              type="string" 
+              value={"max available amount"}
               className={styles.input} 
-              ref={withdrawInput}
-              disabled={isTransactionPending}/>
+              disabled={true}/>
             <Button 
               className={styles.btn} 
               onClick={withdraw}
