@@ -9,14 +9,14 @@
   text-align: center;
 }
 
-.group {
-  display: flex;
-  padding: 10px;
-}
-
 .row {
   display: flex;
   flex-direction: column;
+}
+
+.group {
+  display: flex;
+  padding: 10px;
 }
 
 .input {
