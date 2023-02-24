@@ -7,10 +7,10 @@ import { Account } from '@/feature/wallet';
 import Button from '@/libs/ui/Button';
 import { useNetworkProvider } from '@/libs/network';
 import deploymentLock from '@dgma/protocol/deployment-lock.json';
+import faucetAbi from '@dgma/protocol/abi/contracts/faucet.sol/Faucet.json';
 import styles from './Demo.module.css'
 
-const faucetFacetAbi = {} as ethers.ContractInterface;
-const appDiamondAddress = deploymentLock.rabbit.AppDiamond.address;
+const faucetAddress = deploymentLock.rabbit.Faucet.address;
 
 export default function Demo() {
 
@@ -21,9 +21,21 @@ export default function Demo() {
   const handleGetPigmy = useCallback(
     async () => {
       const signer = (await getProvider()).getSigner();
-      const contract = new ethers.Contract(appDiamondAddress, faucetFacetAbi, signer);
+      const contract = new ethers.Contract(faucetAddress, faucetAbi, signer);
       setTransactionPending(true);
-      const ts = await contract.transfer();
+      const ts = await contract.withdraw();
+      await ts.wait(1);
+      setTransactionPending(false);
+    },
+    [setTransactionPending, getProvider]
+  );
+
+  const handleDepositPigmy = useCallback(
+    async () => {
+      const signer = (await getProvider()).getSigner();
+      const contract = new ethers.Contract(faucetAddress, faucetAbi, signer);
+      setTransactionPending(true);
+      const ts = await contract.deposit({value: ethers.utils.parseEther("100")});
       await ts.wait(1);
       setTransactionPending(false);
     },
@@ -59,7 +71,8 @@ export default function Demo() {
             </p>
           </div>
         </div>
-        <Button onClick={handleGetPigmy}> Get some PIGMY from faucet </Button>
+        <Button onClick={handleGetPigmy}> Get some PIGMY from the faucet </Button>
+        <Button className={styles.depositBtn} onClick={handleDepositPigmy}> Deposit 100 PIGMY to the faucet </Button>
       </div>
       <DemoForm setTransactionPending={setTransactionPending} isTransactionPending={isTransactionPending} />
       <Nav isShowed/>

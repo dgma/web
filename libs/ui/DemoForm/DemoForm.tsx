@@ -8,10 +8,8 @@ import { useNetworkProvider, GetProvider } from '@/libs/network'
 import { toBigNumERC20 } from '@/libs/decimals';
 
 import deploymentLock from '@dgma/protocol/deployment-lock.json'
-// import vaultFacetAbi from '@dgma/protocol/abi/contracts/app/facets/vault.sol/VaultFacet.json'
+import vaultFacetAbi from '@dgma/protocol/abi/contracts/app/facets/vaults.sol/VaultFacet.json';
 import styles from './DemoForm.module.css';
-
-const vaultFacetAbi = {} as ethers.ContractInterface;
 
 const appDiamondAddress = deploymentLock.rabbit.AppDiamond.address
 const tokenAddress = deploymentLock.rabbit.USDgmTokenDiamond.address
