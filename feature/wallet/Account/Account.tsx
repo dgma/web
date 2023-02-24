@@ -28,7 +28,7 @@ export const Account: FC<AccountProps> = ({ pending }) => {
   }
 
   return (
-    <Button onClick={connectToMetaMask}>
+    <Button onClick={connectToMetaMask} className={styles.walletBtn}>
       Connect to MetaMask
     </Button>
   );
