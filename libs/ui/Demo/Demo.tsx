@@ -19,15 +19,19 @@ const links = [
   },
 ];
 
+interface DemoProps {
+  isConnectedToProperNetwork: boolean
+}
 
-export default function Demo() {
+
+export default function Demo({ isConnectedToProperNetwork }: DemoProps) {
 
   const [isTransactionPending, setTransactionPending] = useState(false);
 
   return (
     <div className={styles.root}>
       <Account pending={isTransactionPending} />
-      <DemoSetup />
+      <DemoSetup isConnectedToProperNetwork={isConnectedToProperNetwork} />
       <DemoForm setTransactionPending={setTransactionPending} isTransactionPending={isTransactionPending} />
       <Nav isShowed links={links}/>
     </div>
