@@ -13,7 +13,7 @@ const reload = () => { window.location.reload(); };
 
 export default function DemoPage() {
 
-  const { isConnectionInProcess, provider } = useNetworkProvider();
+  const { provider } = useNetworkProvider();
 
   const [showLoader, setShowLoader] = useState(true); 
 
@@ -63,7 +63,7 @@ export default function DemoPage() {
       </Head>
       <main className={styles.main}>
         {
-          isConnectionInProcess || showLoader
+          showLoader
           ? <div className={styles.overlay}>
               <SyncLoader color={"gray"} />
             </div>
