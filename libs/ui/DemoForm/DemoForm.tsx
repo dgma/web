@@ -130,21 +130,23 @@ const DemoForm: FC<DemoFormProps> = ({setTransactionPending, isTransactionPendin
     }
   }
 
-  const handleGetPigmy = async () => {
+  const handleGetPigmy = useCallback(async () => {
     try {
       const promise = async () => {
         const addr = await provider?.getSigner().getAddress();
         const res  = await fetch(`${window.location.origin}/api/getTokens?addr=${addr}`);
         if (res.status === 200) {
           await wait(10000);
-          toast.info('100 PIGMY sent to your wallet!')
+          toast.success('100 PIGMY sent to your wallet!')
+        } else {
+          toast.error('Not enough coins in faucet')
         }
-        handleLoading(promise())
       }
+      handleLoading(promise())
     } catch (error) {
-      toast.error('Not enough coins in faucet')
+      toast.error('Something went wrong')
     }
-  };
+  }, [provider, handleLoading]);
 
   const addUSDgmToken = async () => {
     try {
