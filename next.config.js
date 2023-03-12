@@ -6,6 +6,8 @@ const nextConfig = {
   output: 'standalone',
   sentry: {
     hideSourceMaps: true,
+    disableServerWebpackPlugin: !process.env.SENTRY_DSN,
+    disableClientWebpackPlugin: !process.env.NEXT_PUBLIC_SENTRY_DSN,
   }
 }
 
