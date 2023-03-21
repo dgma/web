@@ -1,0 +1,9 @@
+[
+  {
+    "inputs": [],
+    "name": "modifyDiamondStore",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]
