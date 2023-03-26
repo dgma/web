@@ -1,4 +1,3 @@
-
 import type { FC } from 'react';
 import { MouseEvent, useRef, useCallback, useState, useEffect } from 'react';
 import { ethers } from 'ethers'
@@ -6,16 +5,15 @@ import { ethers } from 'ethers'
 import Button from '@/libs/ui/Button';
 import { useApp } from '@/libs/context/app';
 import useVault from '@/libs/hooks/useVault';
-import useOracle from '@/libs/hooks/useOracle';
 import { synth, collateralToken } from '@/libs/constants';
 import { safeContractCall } from '@/libs/utils';
 
+import { useGetBalanceOfCollateral, useGetBalanceOfDebt, useGetMaxMint } from '@/app/feature/vault';
+import { useGetLatestEthPrice } from '@/app/feature/oracles';
+
 import styles from './VaultDesk.module.css';
 
-interface VaultDeskProps { }
-
-const VaultDesk: FC<VaultDeskProps> = () => {
-
+const VaultDesk: FC = () => {
   const {
     currentAccount,
     provider,
@@ -25,17 +23,11 @@ const VaultDesk: FC<VaultDeskProps> = () => {
   } = useApp();
 
   const vault = useVault(provider);
-  const oracle = useOracle(provider);
 
   const depositInput = useRef<HTMLInputElement>(null);
   const withdrawInput = useRef<HTMLInputElement>(null);
   const mintInput = useRef<HTMLInputElement>(null);
   const burnInput = useRef<HTMLInputElement>(null);
-
-  const [collateral, setCollateral] = useState("0");
-  const [collateralPrice, setCollateralPrice] = useState("0");
-  const [debt, setDebt] = useState("0");
-  const [availableToMint, setAvailableToMint] = useState("0");
 
   const handleLoading = useCallback(
     async (wait: Promise<any>) => {
@@ -46,63 +38,10 @@ const VaultDesk: FC<VaultDeskProps> = () => {
     [setTransactionPending]
   );
 
-  const updateAvailableToMintInfo = useCallback(async () => {
-    const availableToMint = await safeContractCall<ethers.BigNumber>(vault.maxMint(synth, collateralToken, currentAccount));
-    if (!!availableToMint) {
-      setAvailableToMint(ethers.utils.formatEther(availableToMint))
-    }
-  }, [vault, currentAccount])
-
-  const updateDepositInfo = useCallback(async () => {
-    const collateral = await safeContractCall<ethers.BigNumber>(vault.balanceOfCollateral(synth, collateralToken, currentAccount));
-    if (!!collateral) {
-      setCollateral(ethers.utils.formatEther(collateral));
-    }
-  }, [vault, currentAccount])
-
-  const updateDebtInfo = useCallback(async () => {
-    const debt = await safeContractCall<ethers.BigNumber>(vault.balanceOfDebt(synth, collateralToken, currentAccount));
-    if (!!debt) {
-      setDebt(ethers.utils.formatEther(debt));
-    }
-  }, [vault, currentAccount]);
-
-  const updatePrice = useCallback(
-    async () => {
-      const price = await safeContractCall<ethers.BigNumber>(oracle.latestRoundData());
-      if (price) {
-        setCollateralPrice(ethers.utils.formatEther(price));
-      }
-    },
-    [oracle]
-  );
-
-  useEffect(
-    () => {
-      const intervalTimer = setInterval(updatePrice, 60000);
-      return () => { clearInterval(intervalTimer) }
-    },
-    [updatePrice]
-  )
-
-  useEffect(
-    () => {
-      if (isConnectedToProperNetwork && currentAccount) {
-        updateDepositInfo();
-        updateDebtInfo();
-        updateAvailableToMintInfo();
-        updatePrice();
-      }
-    },
-    [
-      updateDepositInfo, 
-      updateDebtInfo, 
-      updatePrice, 
-      updateAvailableToMintInfo, 
-      isConnectedToProperNetwork, 
-      currentAccount
-    ]
-  )
+  const { availableToMint } = useGetMaxMint()
+  const { balanceOfCollateral: collateral } = useGetBalanceOfCollateral()
+  const { balanceOfDebt: debt } = useGetBalanceOfDebt()
+  const { latestEthPrice: collateralPrice } = useGetLatestEthPrice()
 
   const deposit = async (event: MouseEvent<HTMLButtonElement>) => {
     const val = depositInput?.current?.value;
