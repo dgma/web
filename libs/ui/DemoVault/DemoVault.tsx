@@ -1,50 +1,41 @@
-
 import type { FC } from 'react';
 import { useCallback } from 'react';
-import { toast } from 'react-toastify';
 import Typewriter from 'typewriter-effect';
-import { ethers } from 'ethers'
+
+import { useOpenVault } from '@/app/feature/vault';
+import { useGetPigmy } from '@/app/feature/demo';
+import { useAddUSDgmToWallet } from '@/app/feature/wallet';
+import useVault from '@/libs/hooks/useVault';
 
 import Button from '@/libs/ui/Button';
-import VaultDesk from './components/VaultDesk';
 import { useApp } from '@/libs/context/app';
-import { wait, safeContractCall } from '@/libs/utils';
-import useVault from '@/libs/hooks/useVault';
+
 import { synth, collateralToken } from '@/libs/constants';
+
+import VaultDesk from './components/VaultDesk';
 
 import styles from './DemoVault.module.css';
 
-interface MetamaskInteractionError {
-  message?: string
-}
-interface DemoVaultProps {};
-
-const DemoVault: FC<DemoVaultProps> = () => {
-
-  const { 
-    provider, 
+const DemoVault: FC = () => {
+  const {
+    setTransactionPending,
     isConnectedToProperNetwork,
-    setTransactionPending, 
     isTransactionPending,
-    currentAccount, 
-    walletApp,
-    vaultOpened, 
+    currentAccount,
+    provider,
+    vaultOpened,
     setVaultOpened,
   } = useApp();
 
-  const vault = useVault(provider);
+  const vault = useVault(provider)
+
+  const { openVault } = useOpenVault()
+  const { getPigmy } = useGetPigmy()
+  const { addUSDgmToWallet } = useAddUSDgmToWallet()
 
   const handleOpenVault = useCallback(async () => {
       setTransactionPending(true);
-      const ts = await safeContractCall(
-        vault.open(
-          synth,
-          collateralToken,
-          currentAccount,
-          {value: ethers.utils.parseEther("0.1")}
-        )
-      );
-      await ts?.wait(1);
+      await openVault()
       const isVaultOpened =  await vault.isAccountOpened(synth, collateralToken, currentAccount);
       setTransactionPending(false);
       setVaultOpened(isVaultOpened)
@@ -52,54 +43,13 @@ const DemoVault: FC<DemoVaultProps> = () => {
     [setTransactionPending, vault, currentAccount, setVaultOpened]
   )
 
-  const handleGetPigmy = useCallback(async () => {
-    try {
-      setTransactionPending(true);
-      const addr = await provider?.getSigner().getAddress();
-      const res  = await fetch(`${window.location.origin}/api/getTokens?addr=${addr}`);
-      if (res.status === 200) {
-        await wait(10000);
-        toast.success('100 PIGMY sent to your wallet!')
-      } else {
-        toast.error('Not enough coins in faucet')
-      }
-      setTransactionPending(false);
-    } catch (error) {
-      toast.error((error as MetamaskInteractionError)?.message || 'Get pigmy: something went wrong')
-    }
-  }, [provider, setTransactionPending]);
+  const handleGetPigmy = useCallback(() => {
+    getPigmy()
+  }, [getPigmy]);
 
-  const addUSDgmToken = async () => {
-    try {
-      await (walletApp() as any)?.request({
-        method: 'wallet_watchAsset',
-        params: {
-          type: 'ERC20',
-          options: {
-            address: synth,
-            symbol: 'USDgm',
-            decimals: 18,
-          },
-        }
-      })
-      // provider api does not support sending non-array params yet
-      // await provider?.send(
-      //   'wallet_watchAsset',
-      //   [
-      //     {
-      //       type: 'ERC20',
-      //       options: {
-      //         address: tokenAddress,
-      //         symbol: 'USDgm',
-      //         decimals: 18,
-      //       },
-      //     }
-      //   ]
-      // )
-    } catch (error) {
-      toast.error((error as MetamaskInteractionError)?.message || 'Error when adding token')
-    }
-  };
+  const addUSDgmToken = useCallback(() => {
+    addUSDgmToWallet()
+  }, [addUSDgmToWallet]);
 
   const isFormDisabled = isTransactionPending || !isConnectedToProperNetwork || !currentAccount;
 
