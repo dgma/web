@@ -21,7 +21,7 @@ const useGetMaxMint = () => {
 
   const shouldFetch = isConnectedToProperNetwork && currentAccount
 
-  const { data, isLoading, mutate } = useSWR(() => shouldFetch ? 'valut.maxMint' : null, fetcher)
+  const { data, isLoading, mutate } = useSWR(() => shouldFetch ? 'vault.maxMint' : null, fetcher)
 
   return { data, isLoading, mutate }
 }
