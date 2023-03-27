@@ -8,9 +8,11 @@ const handleGlobalSWRError = (error: unknown) => {
     toast.error(error.message)
     sentry.captureException(error.originalError)
   } else if (error instanceof Error) {
+    console.error(error)
     toast.error('Unexpected error')
     sentry.captureException(error)
   } else if (typeof error === 'string') {
+    console.error(error)
     toast.error(error)
     sentry.captureMessage(error)
   }

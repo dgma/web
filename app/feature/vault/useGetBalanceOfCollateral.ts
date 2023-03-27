@@ -10,9 +10,9 @@ const useGetBalanceOfCollateral = () => {
     currentAccount,
     isConnectedToProperNetwork,
     provider,
-  } = useApp();
+  } = useApp()
     
-  const vault = useVault(provider);
+  const vault = useVault(provider)
 
   const fetcher = async () => {
     const balanceOfCollateral = await vault.balanceOfCollateral(synth, collateralToken, currentAccount)
