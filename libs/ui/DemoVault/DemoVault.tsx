@@ -27,9 +27,7 @@ const DemoVault: FC = () => {
 
   const handleOpenVault = useCallback(() => {
     openVault()
-  },
-  [openVault]
-  )
+  }, [openVault])
 
   const handleGetPigmy = useCallback(() => {
     getPigmy()
