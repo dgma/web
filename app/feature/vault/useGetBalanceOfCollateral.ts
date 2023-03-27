@@ -21,9 +21,9 @@ const useGetBalanceOfCollateral = () => {
 
   const shouldFetch = isConnectedToProperNetwork && currentAccount
 
-  const { data, isLoading } = useSWR(() => shouldFetch ? 'valut.balanceOfCollateral' : null, fetcher)
+  const { data, isLoading, mutate } = useSWR(() => shouldFetch ? 'valut.balanceOfCollateral' : null, fetcher)
 
-  return { balanceOfCollateral: data, isLoading }
+  return { data, isLoading, mutate }
 }
 
 export default useGetBalanceOfCollateral

@@ -38,9 +38,9 @@ const VaultDesk: FC = () => {
     [setTransactionPending]
   );
 
-  const { availableToMint } = useGetMaxMint()
-  const { balanceOfCollateral: collateral } = useGetBalanceOfCollateral()
-  const { balanceOfDebt: debt } = useGetBalanceOfDebt()
+  const availableToMint = useGetMaxMint()
+  const balanceOfCollateral = useGetBalanceOfCollateral()
+  const balanceOfDebt = useGetBalanceOfDebt()
   const { latestEthPrice: collateralPrice } = useGetLatestEthPrice()
 
   const deposit = async (event: MouseEvent<HTMLButtonElement>) => {
@@ -51,8 +51,8 @@ const VaultDesk: FC = () => {
           vault.depositNative(synth, currentAccount, { value: ethers.utils.parseEther(val) })
         );
         await ts?.wait(1);
-        updateDepositInfo();
-        updateAvailableToMintInfo();
+        balanceOfCollateral.mutate();
+        availableToMint.mutate();
         (depositInput.current as HTMLInputElement).value = "";
       }
       handleLoading(promise())
@@ -66,8 +66,8 @@ const VaultDesk: FC = () => {
           vault.withdrawNative(synth, currentAccount, ethers.utils.parseEther(val))
         );
         await ts?.wait(1);
-        updateDepositInfo();
-        updateAvailableToMintInfo();
+        balanceOfCollateral.mutate();
+        availableToMint.mutate();
         (withdrawInput.current as HTMLInputElement).value = "";
       }
       handleLoading(promise())
@@ -81,8 +81,8 @@ const VaultDesk: FC = () => {
           vault.mint(synth, collateralToken, currentAccount, ethers.utils.parseUnits(val))
         );
         await ts?.wait(1);
-        updateDebtInfo();
-        updateAvailableToMintInfo();
+        balanceOfDebt.mutate();
+        availableToMint.mutate();
         (mintInput.current as HTMLInputElement).value = "";
       }
       handleLoading(promise())
@@ -96,8 +96,8 @@ const VaultDesk: FC = () => {
           vault.burn(synth, collateralToken, ethers.utils.parseUnits(val))
         );
         await ts?.wait(1);
-        updateDebtInfo();
-        updateAvailableToMintInfo();
+        balanceOfDebt.mutate();
+        availableToMint.mutate();
         (burnInput.current as HTMLInputElement).value = "";
       }
       handleLoading(promise())
@@ -113,15 +113,15 @@ const VaultDesk: FC = () => {
       <div className={styles.row}>
         <div className={styles.group}>
           <p className={styles.vaultInfoTitle}>PIGMY locked in vault:</p>
-          <p className={styles.vaultInfoValue}>{collateral}</p>
+          <p className={styles.vaultInfoValue}>{balanceOfCollateral.data}</p>
         </div>
         <div className={styles.group}>
           <p className={styles.vaultInfoTitle}>Issued USDgm debt:</p>
-          <p className={styles.vaultInfoValue}>{debt}</p>
+          <p className={styles.vaultInfoValue}>{balanceOfDebt.data}</p>
         </div>
         <div className={styles.group}>
           <p className={styles.vaultInfoTitle}>Available to mint</p>
-          <p className={styles.vaultInfoValue}>{availableToMint}</p>
+          <p className={styles.vaultInfoValue}>{availableToMint.data}</p>
         </div>
       </div>
       <div className={styles.row}>

@@ -21,9 +21,9 @@ const useGetBalanceOfDebt = () => {
 
   const shouldFetch = isConnectedToProperNetwork && currentAccount
 
-  const { data, isLoading } = useSWR(() => shouldFetch ? 'valut.balanceOfDebt' : null, fetcher)
+  const { data, isLoading, mutate } = useSWR(() => shouldFetch ? 'valut.balanceOfDebt' : null, fetcher)
 
-  return { balanceOfDebt: data, isLoading }
+  return { data, isLoading, mutate }
 }
 
 export default useGetBalanceOfDebt
