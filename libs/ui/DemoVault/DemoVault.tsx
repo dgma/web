@@ -5,12 +5,9 @@ import Typewriter from 'typewriter-effect';
 import { useOpenVault } from '@/app/feature/vault';
 import { useGetPigmy } from '@/app/feature/demo';
 import { useAddUSDgmToWallet } from '@/app/feature/wallet';
-import useVault from '@/libs/hooks/useVault';
 
 import Button from '@/libs/ui/Button';
 import { useApp } from '@/libs/context/app';
-
-import { synth, collateralToken } from '@/libs/constants';
 
 import VaultDesk from './components/VaultDesk';
 
@@ -18,29 +15,20 @@ import styles from './DemoVault.module.css';
 
 const DemoVault: FC = () => {
   const {
-    setTransactionPending,
     isConnectedToProperNetwork,
     isTransactionPending,
     currentAccount,
-    provider,
     vaultOpened,
-    setVaultOpened,
   } = useApp();
-
-  const vault = useVault(provider)
 
   const { openVault } = useOpenVault()
   const { getPigmy } = useGetPigmy()
   const { addUSDgmToWallet } = useAddUSDgmToWallet()
 
-  const handleOpenVault = useCallback(async () => {
-      setTransactionPending(true);
-      await openVault()
-      const isVaultOpened =  await vault.isAccountOpened(synth, collateralToken, currentAccount);
-      setTransactionPending(false);
-      setVaultOpened(isVaultOpened)
-    },
-    [setTransactionPending, vault, currentAccount, setVaultOpened]
+  const handleOpenVault = useCallback(() => {
+    openVault()
+  },
+  [openVault]
   )
 
   const handleGetPigmy = useCallback(() => {

@@ -2,16 +2,14 @@ import useSWRMutation from 'swr/mutation'
 import { ethers } from 'ethers'
 
 import { synth, collateralToken } from '@/libs/constants'
-
-import { useApp } from '../../../libs/context/app'
-
-import useVault from '../../../libs/hooks/useVault'
+import { useApp } from '@/libs/context/app'
+import useVault from '@/libs/hooks/useVault'
 
 const useOpenVault = () => {
   const contract = useVault();
-  const { 
-    setTransactionPending, 
-    currentAccount, 
+  const {
+    setTransactionPending,
+    currentAccount,
     setVaultOpened,
   } = useApp()
 
@@ -24,8 +22,9 @@ const useOpenVault = () => {
       { value: ethers.utils.parseEther("0.1") }
     )
     await tx.wait();
+    const isVaultOpened =  await contract.isAccountOpened(synth, collateralToken, currentAccount);
+    setVaultOpened(isVaultOpened)
     setTransactionPending(false);
-    setVaultOpened(true)
   }
 
   const { trigger } = useSWRMutation('vault.open', fetcher)
