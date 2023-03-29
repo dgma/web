@@ -7,6 +7,7 @@ import { useNetwork } from './useNetwork'
 import { useWallet } from './useWallet';
 import { wait, reload } from '@/libs/utils';
 import { synth, collateralToken, chainId } from '@/libs/constants';
+import { useIsVaultOpened } from '@/app/feature/vault'
 
 import useVault from "@/libs/hooks/useVault";
 
@@ -28,29 +29,15 @@ const verifyChain = async (provider: ethers.providers.Web3Provider) => {
   }
 };
 
-const checkIsVaultOpened = async (currentAccount: string, isConnectedToProperNetwork: boolean, contract: ethers.Contract) => {
-  if (currentAccount && isConnectedToProperNetwork) {
-    try {
-      const resetTimer = setTimeout(reload, 4000);
-      const isVaultOpened =  await contract.isAccountOpened(synth, collateralToken, currentAccount);
-      clearTimeout(resetTimer);
-      return isVaultOpened;
-    } catch (error) {
-      throw new Error((error as any)?.reason || 'Something went wrong');
-    }
-  }
-};
-
 const AppProvider: FC<PropsWithChildren> = ({ children }) => {
-
   const [isTransactionPending, setTransactionPending] = useState(false);
-  const [vaultOpened, setVaultOpened] = useState<boolean>();
-  const [showLoader, setShowLoader] = useState(true); 
+  const [showLoader, setShowLoader] = useState(true)
+  const { isVaultOpened } = useIsVaultOpened()
 
   const {
-    provider,  
-    isConnectedToProperNetwork, 
-    setIsConnectedToProperNetwork 
+    provider,
+    isConnectedToProperNetwork,
+    setIsConnectedToProperNetwork
   } = useNetwork();
 
   const {
@@ -68,24 +55,21 @@ const AppProvider: FC<PropsWithChildren> = ({ children }) => {
           console.log('start verification');
           const isConnectedToProperNetwork = await verifyChain(provider);
           console.log('isConnectedToProperNetwork', isConnectedToProperNetwork);
-          const isVaultOpened = await checkIsVaultOpened(currentAccount, isConnectedToProperNetwork, contract);
-          console.log('isVaultOpened', isVaultOpened);
           setIsConnectedToProperNetwork(isConnectedToProperNetwork);
-          setVaultOpened(!!isVaultOpened);
         }
       } catch (error) {
         toast.error((error as Error)?.message);
         console.log(error);
       }
-    }, 
+    },
     [setIsConnectedToProperNetwork, provider, currentAccount, contract]
   )
 
   useEffect(
     () => {
       walletApp()?.on('chainChanged', reload);
-      return () => { 
-        walletApp()?.removeListener('chainChanged', reload); 
+      return () => {
+        walletApp()?.removeListener('chainChanged', reload);
       }
     },
     [walletApp]
@@ -101,19 +85,18 @@ const AppProvider: FC<PropsWithChildren> = ({ children }) => {
   );
 
   return (
-    <AppContext.Provider 
-      value={{ 
-        isTransactionPending, 
+    <AppContext.Provider
+      value={{
+        isTransactionPending,
         setTransactionPending,
-        provider,  
-        isConnectedToProperNetwork, 
+        provider,
+        isConnectedToProperNetwork,
         setIsConnectedToProperNetwork,
         connectToMetaMask,
         currentAccount,
         walletApp,
         showLoader,
-        vaultOpened,
-        setVaultOpened,
+        vaultOpened: isVaultOpened
       }}
     >
       {children}
@@ -122,3 +105,4 @@ const AppProvider: FC<PropsWithChildren> = ({ children }) => {
 };
 
 export default dynamic(() => Promise.resolve(AppProvider), { ssr: false });
+
