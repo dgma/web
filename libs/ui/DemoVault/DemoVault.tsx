@@ -10,7 +10,7 @@ import VaultDesk from './components/VaultDesk';
 import { useApp } from '@/libs/context/app';
 import { wait, safeContractCall } from '@/libs/utils';
 import useVault from '@/libs/hooks/useVault';
-import { synth, collateralToken } from '@/libs/constants';
+import { config } from '@/libs/constants';
 
 import styles from './DemoVault.module.css';
 
@@ -33,6 +33,7 @@ const DemoVault: FC<DemoVaultProps> = () => {
   } = useApp();
 
   const vault = useVault(provider);
+  const { synth, collateralToken } = config();
 
   const handleOpenVault = useCallback(async () => {
       setTransactionPending(true);
@@ -49,7 +50,7 @@ const DemoVault: FC<DemoVaultProps> = () => {
       setTransactionPending(false);
       setVaultOpened(isVaultOpened)
     },
-    [setTransactionPending, vault, currentAccount, setVaultOpened]
+    [setTransactionPending, vault, currentAccount, setVaultOpened, synth, collateralToken]
   )
 
   const handleGetPigmy = useCallback(async () => {

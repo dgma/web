@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { useApp } from '@/libs/context/app';
 import Button from '@/libs/ui/Button';
-import { networkName, chainId, rpc } from '@/libs/constants';
+import { config } from '@/libs/constants';
 import styles from './DemoSetup.module.css'
 
 interface DemoSetupProps {}
@@ -11,6 +11,7 @@ interface DemoSetupProps {}
 const DemoSetup: FC<DemoSetupProps> = () => {
 
   const { provider, isConnectedToProperNetwork } = useApp();
+  const { networkName, chainId, rpc } = config();
 
   useEffect(
     () => { 

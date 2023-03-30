@@ -7,7 +7,7 @@ import Button from '@/libs/ui/Button';
 import { useApp } from '@/libs/context/app';
 import useVault from '@/libs/hooks/useVault';
 import useOracle from '@/libs/hooks/useOracle';
-import { synth, collateralToken } from '@/libs/constants';
+import { config } from '@/libs/constants';
 import { safeContractCall } from '@/libs/utils';
 
 import styles from './VaultDesk.module.css';
@@ -24,6 +24,7 @@ const VaultDesk: FC<VaultDeskProps> = () => {
     isConnectedToProperNetwork
   } = useApp();
 
+  const { synth, collateralToken } = config();
   const vault = useVault(provider);
   const oracle = useOracle(provider);
 
@@ -51,21 +52,21 @@ const VaultDesk: FC<VaultDeskProps> = () => {
     if (!!availableToMint) {
       setAvailableToMint(ethers.utils.formatEther(availableToMint))
     }
-  }, [vault, currentAccount])
+  }, [vault, currentAccount, synth, collateralToken])
 
   const updateDepositInfo = useCallback(async () => {
     const collateral = await safeContractCall<ethers.BigNumber>(vault.balanceOfCollateral(synth, collateralToken, currentAccount));
     if (!!collateral) {
       setCollateral(ethers.utils.formatEther(collateral));
     }
-  }, [vault, currentAccount])
+  }, [vault, currentAccount, synth, collateralToken])
 
   const updateDebtInfo = useCallback(async () => {
     const debt = await safeContractCall<ethers.BigNumber>(vault.balanceOfDebt(synth, collateralToken, currentAccount));
     if (!!debt) {
       setDebt(ethers.utils.formatEther(debt));
     }
-  }, [vault, currentAccount]);
+  }, [vault, currentAccount, synth, collateralToken]);
 
   const updatePrice = useCallback(
     async () => {
