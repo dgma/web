@@ -10,7 +10,7 @@ const useIsVaultOpened = () => {
 
   const fetcher = async () => contract.isAccountOpened(synth, collateralToken, currentAccount)
 
-  const { data: isVaultOpened, mutate } = useSWR('vault.isOpened', fetcher)
+  const { data: isVaultOpened, mutate } = useSWR(() => currentAccount ? 'vault.isOpened' : null, fetcher)
 
   return { isVaultOpened, mutate }
 }

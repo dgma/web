@@ -1,20 +1,31 @@
 import { useEffect, useState, useCallback, createContext } from "react";
-import type { FC, PropsWithChildren } from "react";
+import type { Dispatch, FC, PropsWithChildren } from "react";
 import dynamic from 'next/dynamic'
 import { ethers } from 'ethers'
 import { toast } from 'react-toastify';
 import { useNetwork } from './useNetwork'
 import { useWallet } from './useWallet';
+import type { UseWalletResult } from './useWallet';
 import { wait, reload } from '@/libs/utils';
 import { synth, collateralToken, chainId } from '@/libs/constants';
-import { useIsVaultOpened } from '@/app/feature/vault'
 
-import useVault from "@/libs/hooks/useVault";
+type AppContext = UseWalletResult & {
+  isTransactionPending: boolean;
+  setTransactionPending: Dispatch<boolean>;
+  provider?: ethers.providers.Web3Provider;
+  isConnectedToProperNetwork: boolean;
+  setIsConnectedToProperNetwork: Dispatch<boolean>;
+  showLoader: boolean;
+}
 
-
-export const AppContext = createContext<any>({
+export const AppContext = createContext<AppContext>({
   isTransactionPending: false,
   setTransactionPending: () => {},
+  isConnectedToProperNetwork: false,
+  setIsConnectedToProperNetwork: () => {},
+  connectToMetaMask: () => Promise.resolve(null),
+  walletApp: () => undefined,
+  showLoader: false,
 })
 
 const verifyChain = async (provider: ethers.providers.Web3Provider) => {
@@ -32,7 +43,6 @@ const verifyChain = async (provider: ethers.providers.Web3Provider) => {
 const AppProvider: FC<PropsWithChildren> = ({ children }) => {
   const [isTransactionPending, setTransactionPending] = useState(false);
   const [showLoader, setShowLoader] = useState(true)
-  const { isVaultOpened } = useIsVaultOpened()
 
   const {
     provider,
@@ -45,8 +55,6 @@ const AppProvider: FC<PropsWithChildren> = ({ children }) => {
     currentAccount,
     walletApp,
   } = useWallet(provider);
-
-  const contract = useVault(provider);
 
   const verification = useCallback(
     async () => {
@@ -62,7 +70,7 @@ const AppProvider: FC<PropsWithChildren> = ({ children }) => {
         console.log(error);
       }
     },
-    [setIsConnectedToProperNetwork, provider, currentAccount, contract]
+    [setIsConnectedToProperNetwork, provider, currentAccount]
   )
 
   useEffect(
@@ -96,7 +104,6 @@ const AppProvider: FC<PropsWithChildren> = ({ children }) => {
         currentAccount,
         walletApp,
         showLoader,
-        vaultOpened: isVaultOpened
       }}
     >
       {children}

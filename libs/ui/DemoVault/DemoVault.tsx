@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import { useCallback } from 'react';
 import Typewriter from 'typewriter-effect';
 
-import { useOpenVault } from '@/app/feature/vault';
+import { useIsVaultOpened, useOpenVault } from '@/app/feature/vault';
 import { useGetPigmy } from '@/app/feature/demo';
 import { useAddUSDgmToWallet } from '@/app/feature/wallet';
 
@@ -14,11 +14,12 @@ import VaultDesk from './components/VaultDesk';
 import styles from './DemoVault.module.css';
 
 const DemoVault: FC = () => {
+  const { isVaultOpened } = useIsVaultOpened()
+
   const {
     isConnectedToProperNetwork,
     isTransactionPending,
     currentAccount,
-    vaultOpened,
   } = useApp();
 
   const { openVault } = useOpenVault()
@@ -41,7 +42,7 @@ const DemoVault: FC = () => {
 
   const renderVault = () => {
     return (
-      vaultOpened
+      isVaultOpened
       ? <VaultDesk />
       : (
         <div className={styles.group}>
