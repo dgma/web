@@ -7,7 +7,7 @@ import { useNetwork } from './useNetwork'
 import { useWallet } from './useWallet';
 import type { UseWalletResult } from './useWallet';
 import { wait, reload } from '@/libs/utils';
-import { synth, collateralToken, chainId } from '@/libs/constants';
+import { chainId } from '@/libs/constants';
 
 type AppContext = UseWalletResult & {
   isTransactionPending: boolean;
