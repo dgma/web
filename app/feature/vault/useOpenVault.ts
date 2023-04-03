@@ -8,11 +8,13 @@ import useVault from '@/libs/hooks/useVault'
 import useIsVaultOpened from './useIsVaultOpened'
 
 const useOpenVault = () => {
-  const contract = useVault();
   const {
     setTransactionPending,
     currentAccount,
+    provider,
   } = useApp()
+
+  const contract = useVault(provider)
 
   const { mutate } = useIsVaultOpened()
 

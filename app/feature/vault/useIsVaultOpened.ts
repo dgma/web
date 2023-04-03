@@ -5,10 +5,10 @@ import { useApp } from '@/libs/context/app'
 import useVault from '@/libs/hooks/useVault'
 
 const useIsVaultOpened = () => {
-  const contract = useVault();
-  const { currentAccount } = useApp()
+  const { currentAccount, provider } = useApp()
+  const contract = useVault(provider);
 
-  const fetcher = async () => contract.isAccountOpened(synth, collateralToken, currentAccount)
+  const fetcher = () => contract.isAccountOpened(synth, collateralToken, currentAccount)
 
   const { data: isVaultOpened, mutate } = useSWR(() => currentAccount ? 'vault.isOpened' : null, fetcher)
 
