@@ -1,5 +1,5 @@
 import useSWR from "swr";
-
+import { useEffect } from "react";
 import { synth, collateralToken } from "@/libs/constants";
 import { useApp } from "@/libs/context/app";
 import useVault from "@/libs/hooks/useVault";
@@ -9,15 +9,14 @@ const useIsVaultOpened = () => {
   const contract = useVault(provider);
 
   const fetcher = () => {
-    if (isConnectedToProperNetwork) {
-      console.log("check", isConnectedToProperNetwork);
-      return contract.isAccountOpened(synth, collateralToken, currentAccount);
-    }
-    return false;
+    console.log("check isAccountOpened");
+    return contract.isAccountOpened(synth, collateralToken, currentAccount);
   };
 
+  const shouldFetch = isConnectedToProperNetwork && currentAccount;
+
   const { data: isVaultOpened, mutate } = useSWR(
-    () => (currentAccount ? "vault.isOpened" : null),
+    () => (shouldFetch ? "vault.isOpened" : null),
     fetcher
   );
 
