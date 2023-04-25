@@ -57,7 +57,7 @@ const Welcome: FC = () => {
         startOnboarding={startOnboarding}
         show={isWelcomeButtonShowed && !suspend}
       />
-      {suspend && <div>We are migrating to the new network. ETA: 26.04 </div>}
+      {suspend && <div>We are migrating to the new network</div>}
     </div>
   );
 };
