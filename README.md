@@ -13,13 +13,13 @@
 
 Replace `<your-token>` with your personal access token. You can read about how to create this token [here](https://docs.github.com/en/packages/learn-github-packages/introduction-to-github-packages#authenticating-to-github-packages).
 
-2. Then you need to install the dependencies:
+2. Install the dependencies:
 
 ```bash
 npm install
 ```
 
-3. You need to create `.env` file in the root of the project and add the following variables to it:
+3. Create `.env` file in the root of the project and add the following variables to it:
 
 ```bash
 DEPLOYMENT_NETWORK_NAME=sepolia.dev # or goerli.stage
