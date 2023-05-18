@@ -39,7 +39,7 @@ const Welcome: FC = () => {
 
   return (
     <div className={styles.root}>
-      <h1 className={styles.title}>
+      <h1 className="text-3xl font-bold underline">
         <Typewriter
           onInit={(typewriter) => {
             typewriter
