@@ -6,8 +6,6 @@ import { isMobile } from "react-device-detect";
 import MetaMaskOnboarding from "@metamask/onboarding";
 import { useApp } from "@/libs/context/app";
 
-import styles from "./Welcome.module.css";
-
 const WelcomeButton = dynamic(() => import("./WelcomeButton"), {
   ssr: false,
 });
@@ -38,8 +36,8 @@ const Welcome: FC = () => {
   }, [currentAccount]);
 
   return (
-    <div className={styles.root}>
-      <h1 className="text-3xl font-bold underline">
+    <div className="align-centre container flex flex-col">
+      <h1 className="text-center text-3xl font-bold">
         <Typewriter
           onInit={(typewriter) => {
             typewriter
