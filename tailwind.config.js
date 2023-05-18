@@ -1,3 +1,5 @@
+const colors = require("tailwindcss/colors");
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
@@ -11,6 +13,9 @@ module.exports = {
       container: {
         center: true,
         padding: "2rem",
+      },
+      colors: {
+        primary: colors.neutral,
       },
     },
   },
