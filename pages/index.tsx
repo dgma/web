@@ -1,7 +1,7 @@
 import Head from "next/head";
 
 import SocialIcons from "@/components/SocialIcons";
-import { Welcome } from "@/libs/ui/Welcome";
+import MainBanner from "@/components/MainBanner";
 
 export default function HomePage() {
   return (
@@ -14,9 +14,9 @@ export default function HomePage() {
       </Head>
       <div className="flex h-full flex-col">
         <main className="flex-grow">
-          <Welcome />
+          <MainBanner />
         </main>
-        <footer className="p-4">
+        <footer className="p-6">
           <SocialIcons />
         </footer>
       </div>

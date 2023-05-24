@@ -5,11 +5,11 @@ import styles from "./Button.module.css";
 
 const Button: FC<
   DetailedHTMLProps<ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>
-> = ({ disabled, ...props }) => {
+> = ({ className, disabled, ...props }) => {
   return (
     <button
       {...props}
-      className={classNames(styles.btn, { [styles.primary]: true })}
+      className={classNames(styles.btn, className, { [styles.primary]: true })}
       disabled={disabled}
     />
   );

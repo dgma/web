@@ -1,7 +1,7 @@
 import Image from "next/image";
 
-import LinkedIn from "./icons/linkedin.svg";
-import Twitter from "./icons/twitter.svg";
+import LinkedIn from "./assets/linkedin.svg";
+import Twitter from "./assets/twitter.svg";
 
 const SocialIcons = () => {
   return (
