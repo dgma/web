@@ -15,7 +15,7 @@ module.exports = {
         padding: "2rem",
       },
       colors: {
-        primary: colors.neutral,
+        primary: colors.green,
       },
     },
   },

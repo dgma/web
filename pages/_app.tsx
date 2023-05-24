@@ -17,6 +17,15 @@ export default function App({ Component, pageProps }: AppProps) {
         onError: handleGlobalSWRError,
       }}
     >
+      <style global jsx>{`
+        html,
+        body,
+        body > div:first-child,
+        div#__next {
+          height: 100%;
+        }
+      `}</style>
+
       <AppProvider>
         <Component {...pageProps} />
       </AppProvider>

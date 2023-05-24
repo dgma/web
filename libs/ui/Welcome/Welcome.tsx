@@ -36,8 +36,8 @@ const Welcome: FC = () => {
   }, [currentAccount]);
 
   return (
-    <div className="align-centre container flex flex-col">
-      <h1 className="text-center text-3xl font-bold">
+    <div className="container flex h-full flex-col items-center justify-center gap-y-8">
+      <h1 className="text-center text-3xl font-bold text-primary-500">
         <Typewriter
           onInit={(typewriter) => {
             typewriter
@@ -52,9 +52,17 @@ const Welcome: FC = () => {
           }}
         />
       </h1>
+
+      <p className="text-center">
+        <b>Dogma</b> is a trustless, permissionless, fully decentralized, and
+        governance-minimized financial protocol for stablecoins and synthetic
+        asset issuance.
+      </p>
+
       {isMobile && (
         <p>Mobile version is available only within Metamask App Browser</p>
       )}
+
       <WelcomeButton
         currentAccount={currentAccount}
         startOnboarding={startOnboarding}
