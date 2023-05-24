@@ -1,6 +1,5 @@
 import Head from "next/head";
 import { Demo } from "@/libs/ui/Demo";
-import { ToastContainer } from "react-toastify";
 
 export default function DemoPage() {
   return (
@@ -13,7 +12,6 @@ export default function DemoPage() {
       </Head>
       <main>
         <Demo />
-        <ToastContainer theme="colored" />
       </main>
     </>
   );

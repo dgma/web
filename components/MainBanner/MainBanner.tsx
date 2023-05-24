@@ -1,9 +1,10 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import type { FC } from "react";
 import dynamic from "next/dynamic";
 import Typewriter from "typewriter-effect";
 import { isMobile } from "react-device-detect";
 import MetaMaskOnboarding from "@metamask/onboarding";
+import { toast } from "react-toastify";
 
 import { useApp } from "@/libs/context/app";
 
@@ -17,12 +18,22 @@ const suspendMode = !!suspendMsg?.length;
 const MainBanner: FC = () => {
   const [isWelcomeButtonShowed, setIsWelcomeButtonShowed] = useState(false);
   const { currentAccount } = useApp();
+  const toastId = useId();
 
   const onboarding = useRef<MetaMaskOnboarding>();
 
   const startOnboarding = () => {
     onboarding.current?.startOnboarding();
   };
+
+  useEffect(() => {
+    if (isMobile) {
+      toast.warn(
+        "Mobile version is available only within Metamask App Browser",
+        { toastId, autoClose: false }
+      );
+    }
+  }, [toastId]);
 
   useEffect(() => {
     if (!onboarding.current) {
@@ -61,10 +72,6 @@ const MainBanner: FC = () => {
           asset issuance.
         </p>
       </div>
-
-      {isMobile && (
-        <p>Mobile version is available only within Metamask App Browser</p>
-      )}
 
       <WelcomeButton
         className="mt-8"
