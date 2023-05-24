@@ -2,6 +2,7 @@ import Image from "next/image";
 
 import LinkedIn from "./assets/linkedin.svg";
 import Twitter from "./assets/twitter.svg";
+import Telegram from "./assets/telegram.svg";
 
 const SocialIcons = () => {
   return (
@@ -24,6 +25,11 @@ const SocialIcons = () => {
             rel="noreferrer"
           >
             <Image height={40} alt="LinkedIn" src={LinkedIn} width={40} />
+          </a>
+        </li>
+        <li>
+          <a href="https://t.me/dogmaprotocol" target="_blank" rel="noreferrer">
+            <Image height={40} alt="LinkedIn" src={Telegram} width={40} />
           </a>
         </li>
       </ul>
