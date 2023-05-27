@@ -2,7 +2,7 @@ import deploymentLock from "@dgma/protocol/deployment-lock.json";
 import pkg from "package.json";
 
 import fakeOracle from "@dgma/protocol/abi/contracts/emulation/fakeOracles/IFakeOracle.sol/IFakeOracle.json";
-import vaultFacet from "@dgma/protocol/abi/contracts/app/facets/vault/vaults.sol/VaultFacet.json";
+import dogmaApp from "@dgma/protocol/abi/diamonds/AppDiamond.json";
 
 type deploymentNetwork = "sepolia.dev" | "goerli.stg";
 export const deploymentNetwork = process.env
@@ -55,6 +55,6 @@ export const collateralToken = deploymentLock[deploymentNetwork].WETH10.address;
 export const appDiamond = deploymentLock[deploymentNetwork].AppDiamond.address;
 
 export const abis = {
-  vaultFacet,
+  dogmaApp,
   fakeOracle,
 };
