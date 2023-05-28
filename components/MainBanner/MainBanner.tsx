@@ -5,6 +5,7 @@ import Typewriter from "typewriter-effect";
 import { isMobile } from "react-device-detect";
 import MetaMaskOnboarding from "@metamask/onboarding";
 import { toast } from "react-toastify";
+import { Web3Button } from "@web3modal/react";
 
 import { useApp } from "@/libs/context/app";
 
@@ -73,12 +74,14 @@ const MainBanner: FC = () => {
         </p>
       </div>
 
-      <WelcomeButton
+      <Web3Button />
+      {/* <WelcomeButton
         className="mt-8"
         currentAccount={currentAccount}
         startOnboarding={startOnboarding}
         show={isWelcomeButtonShowed && !suspendMode}
-      />
+      /> */}
+
       {suspendMode && <div>{suspendMsg}</div>}
     </div>
   );
