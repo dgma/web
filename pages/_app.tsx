@@ -1,34 +1,28 @@
 import { SWRConfig } from "swr";
 import type { AppProps } from "next/app";
-
-import {
-  EthereumClient,
-  w3mConnectors,
-  w3mProvider,
-} from "@web3modal/ethereum";
-import { Web3Modal } from "@web3modal/react";
-import { configureChains, WagmiConfig, createConfig } from "wagmi";
-import { sepolia, goerli } from "wagmi/chains";
+import { EthereumClient } from "@web3modal/ethereum";
+import { Web3Modal, Web3ModalProps } from "@web3modal/react";
+import { WagmiConfig } from "wagmi";
 
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
-
-import "@/styles/globals.css";
 
 import { AppProvider } from "@/libs/context/app";
 
 import { handleGlobalSWRError } from "@/app/error-handling";
 
-const chains = [sepolia, goerli];
-const projectId = process.env.NEXT_PUBLIC_WEB3_MODAL_PROJECT_ID ?? "";
-const { publicClient } = configureChains(chains, [w3mProvider({ projectId })]);
+import wagmiConfig, { CHAINS, WALLET_CONNECT_PROJECT_ID } from "@/wagmi.config";
 
-const wagmiConfig = createConfig({
-  autoConnect: true,
-  publicClient,
-  connectors: w3mConnectors({ projectId, version: 1, chains }),
-});
-const ethereumClient = new EthereumClient(wagmiConfig, chains);
+import "@/styles/globals.css";
+
+const web3ModalTheme: Web3ModalProps["themeVariables"] = {
+  "--w3m-accent-color": "#22c55e",
+  "--w3m-background-color": "#22c55e",
+  "--w3m-button-border-radius": "0.25rem",
+  "--w3m-text-medium-regular-weight": "700",
+};
+
+const ethereumClient = new EthereumClient(wagmiConfig, CHAINS);
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
@@ -38,15 +32,6 @@ export default function App({ Component, pageProps }: AppProps) {
       }}
     >
       <WagmiConfig config={wagmiConfig}>
-        <style global jsx>{`
-          html,
-          body,
-          body > div:first-child,
-          div#__next {
-            height: 100%;
-          }
-        `}</style>
-
         <AppProvider>
           <Component {...pageProps} />
         </AppProvider>
@@ -54,7 +39,11 @@ export default function App({ Component, pageProps }: AppProps) {
         <ToastContainer theme="colored" />
       </WagmiConfig>
 
-      <Web3Modal projectId={projectId} ethereumClient={ethereumClient} />
+      <Web3Modal
+        projectId={WALLET_CONNECT_PROJECT_ID}
+        ethereumClient={ethereumClient}
+        themeVariables={web3ModalTheme}
+      />
     </SWRConfig>
   );
 }
