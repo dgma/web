@@ -2,11 +2,6 @@
 const nextConfig = {
   reactStrictMode: true,
   output: "standalone",
-  sentry: {
-    hideSourceMaps: true,
-    disableServerWebpackPlugin: !process.env.SENTRY_DSN,
-    disableClientWebpackPlugin: !process.env.NEXT_PUBLIC_SENTRY_DSN,
-  },
   env: {
     deploymentNetwork: process.env.DEPLOYMENT_NETWORK_NAME,
     chainId: process.env.CHAIN_ID_HEX,
