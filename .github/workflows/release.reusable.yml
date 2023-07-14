@@ -6,6 +6,9 @@ on:
       folder:
         required: true
         type: string
+      composeFile:      
+        required: true
+        type: string
     secrets:
       serverSshPrivateKey:
         required: true
@@ -58,8 +61,8 @@ jobs:
           script:
             cd /root/${{ inputs.folder }};
             ls -alt
-            docker compose down;
+            docker compose -f ${{ inputs.composeFile }} down;
             docker builder prune -a -f;
             docker image prune -a -f;
-            docker compose build --no-cache;
-            docker compose up -d
+            docker compose -f ${{ inputs.composeFile }} build --no-cache;
+            docker compose -f ${{ inputs.composeFile }} up -d

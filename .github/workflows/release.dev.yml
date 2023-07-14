@@ -11,6 +11,7 @@ jobs:
     uses: "./.github/workflows/release.reusable.yml"
     with:
       folder: web-dev
+      composeFile: docker-compose.yml
     secrets:
       serverSshPrivateKey: ${{ secrets.SERVER_SSH_KEY }}
       remoteHost: ${{ secrets.REMOTE_HOST }}
