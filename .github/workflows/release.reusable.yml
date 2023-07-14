@@ -1,0 +1,65 @@
+name: Reusable Workflow for Continues Deployment & Delivery
+
+on:
+  workflow_call:
+    inputs:
+      folder:
+        required: true
+        type: string
+    secrets:
+      serverSshPrivateKey:
+        required: true
+      remoteHost:
+        required: true
+      remoteUser:
+        required: true
+
+jobs:
+  reuse_build_and_validate:
+    uses: "./.github/workflows/quality-gate.reusable.yml"
+    with:
+      save-artifacts: true
+      artifact-id: release-ready-build
+  deploy_sources:
+    needs: reuse_build_and_validate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Download build folder
+        uses: actions/download-artifact@v3
+        with:
+          name: release-ready-build
+          path: build
+      - name: Deploy
+        uses: easingthemes/ssh-deploy@v4.1.8
+        with:
+          SSH_PRIVATE_KEY: ${{ secrets.serverSshPrivateKey }}
+          REMOTE_HOST: ${{ secrets.remoteHost }}
+          REMOTE_USER: ${{ secrets.remoteUser }}
+          ARGS: "-rltgoDzvO"
+          # docker and build are two separate folders
+          SOURCE: "docker/* build public"
+          TARGET: /root/${{ inputs.folder }}
+          SCRIPT_BEFORE: |
+            rm -rf ${{ inputs.folder }}
+          SCRIPT_AFTER: |
+            ls -al
+            echo $RSYNC_STDOUT
+  rollout:
+    needs: deploy_sources
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run Docker Container
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.remoteHost }}
+          username: ${{ secrets.remoteUser }}
+          key: ${{ secrets.serverSshPrivateKey }}
+          script:
+            cd /root/${{ inputs.folder }};
+            ls -alt
+            docker compose down;
+            docker builder prune -a -f;
+            docker image prune -a -f;
+            docker compose build --no-cache;
+            docker compose up -d

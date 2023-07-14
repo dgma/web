@@ -1,0 +1,26 @@
+version: "3.7"
+
+services:
+  web-dev:
+    hostname: web
+    image: web-dev
+    logging:
+      driver: "json-file"
+      options:
+        max-file: "5"
+        max-size: "100m"
+    environment:
+      - PORT=8081
+    build:
+      context: .
+    ports:
+      - "8081:8081"
+    expose:
+      - 8081
+    networks:
+      pub-shared-net:
+
+networks:
+  pub-shared-net:
+    name: pub-shared-net
+    external: true
