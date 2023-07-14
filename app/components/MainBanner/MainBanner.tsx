@@ -28,7 +28,7 @@ const MainBanner: FC = () => {
         </h2>
       </div>
 
-      <div className="mt-8 w-[100px] h-[100px]">
+      <div className="mt-8">
         <Wagmi>
           <Web3Button />
           <Web3NetworkSwitch />

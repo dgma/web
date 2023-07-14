@@ -12,14 +12,9 @@
     "prettier": "prettier --write pages/**/*.ts libs/**/*.ts app/**/*.ts"
   },
   "dependencies": {
-    "@types/node": "20.4.0",
-    "@types/react": "18.2.14",
-    "@types/react-dom": "18.2.6",
     "@web3modal/ethereum": "^2.6.2",
     "@web3modal/react": "^2.6.2",
     "classnames": "2.3.2",
-    "eslint": "8.44.0",
-    "eslint-config-next": "13.4.8",
     "ethers": "6.6.2",
     "next": "13.4.8",
     "react": "18.2.0",
@@ -28,18 +23,23 @@
     "react-spinners": "0.13.8",
     "react-toastify": "9.1.3",
     "typescript": "5.1.6",
+    "@types/node": "20.4.0",
+    "@types/react": "18.2.14",
+    "@types/react-dom": "18.2.6",
     "typewriter-effect": "^2.20.1",
+    "tailwindcss": "3.3.2",
+    "autoprefixer": "^10.4.14",
+    "postcss": "8.4.23",
     "viem": "1.2.9",
     "wagmi": "1.3.7"
   },
   "devDependencies": {
-    "autoprefixer": "^10.4.14",
     "eslint-config-prettier": "^8.8.0",
     "husky": "8.0.3",
     "lint-staged": "13.2.1",
-    "postcss": "8.4.23",
     "prettier": "3.0.0",
     "prettier-plugin-tailwindcss": "0.3.0",
-    "tailwindcss": "3.3.2"
+    "eslint": "8.44.0",
+    "eslint-config-next": "13.4.8"
   }
 }
