@@ -5,28 +5,24 @@ import {
   w3mConnectors,
   w3mProvider,
 } from "@web3modal/ethereum";
-import { Web3Modal } from "@web3modal/react";
-import { useMemo, type ReactNode } from "react";
-import { configureChains, createConfig, WagmiConfig } from "wagmi";
+import { useMemo } from "react";
+import { configureChains, createConfig } from "wagmi";
 import { sepolia } from "wagmi/chains";
+import { projectId } from "@/constants";
 
 const chains = [sepolia];
-const projectId = "8f7958d33f4a4c7ed90d323945fefc81";
 
-type WagmiProps = {
-  children: ReactNode;
-};
-
-export default function Wagmi({ children }: WagmiProps) {
+export default function useWeb3WithWagmi() {
   const chainsConfig = useMemo(
     () => configureChains(chains, [w3mProvider({ projectId })]),
     [],
   );
 
   const wagmiConfig = useMemo(() => {
+    const connectors = w3mConnectors({ projectId, chains });
     return createConfig({
       autoConnect: true,
-      connectors: w3mConnectors({ projectId, chains }),
+      connectors,
       publicClient: chainsConfig.publicClient,
     });
   }, [chainsConfig.publicClient]);
@@ -36,11 +32,8 @@ export default function Wagmi({ children }: WagmiProps) {
     [wagmiConfig],
   );
 
-  return (
-    <>
-      <WagmiConfig config={wagmiConfig}>{children}</WagmiConfig>
-
-      <Web3Modal projectId={projectId} ethereumClient={ethereumClient} />
-    </>
-  );
+  return {
+    wagmiConfig,
+    ethereumClient,
+  };
 }

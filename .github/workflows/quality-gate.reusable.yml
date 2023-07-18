@@ -40,14 +40,13 @@ jobs:
       - name: Build
         env: 
           NODE_ENV: production
-          NEXT_TELEMETRY_DISABLED: 1
         run: npm run build
       - name: Save Build Artifacts
         if: ${{ inputs.save-artifacts }}
         uses: actions/upload-artifact@v3
         with:
           name: ${{ inputs.artifact-id }}
-          path: .next
+          path: dist
           retention-days: 1
           if-no-files-found: error
 

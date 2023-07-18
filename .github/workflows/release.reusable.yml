@@ -6,9 +6,6 @@ on:
       folder:
         required: true
         type: string
-      composeFile:      
-        required: true
-        type: string
     secrets:
       serverSshPrivateKey:
         required: true
@@ -32,7 +29,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: release-ready-build
-          path: build
+          path: app
       - name: Deploy
         uses: easingthemes/ssh-deploy@v4.1.8
         with:
@@ -41,28 +38,10 @@ jobs:
           REMOTE_USER: ${{ secrets.remoteUser }}
           ARGS: "-rltgoDzvO"
           # docker and build are two separate folders
-          SOURCE: "docker/* build public"
+          SOURCE: "app"
           TARGET: /root/${{ inputs.folder }}
           SCRIPT_BEFORE: |
             rm -rf ${{ inputs.folder }}
           SCRIPT_AFTER: |
             ls -al
             echo $RSYNC_STDOUT
-  rollout:
-    needs: deploy_sources
-    runs-on: ubuntu-latest
-    steps:
-      - name: Run Docker Container
-        uses: appleboy/ssh-action@v0.1.10
-        with:
-          host: ${{ secrets.remoteHost }}
-          username: ${{ secrets.remoteUser }}
-          key: ${{ secrets.serverSshPrivateKey }}
-          script:
-            cd /root/${{ inputs.folder }};
-            ls -alt
-            docker compose -f ${{ inputs.composeFile }} down;
-            docker builder prune -a -f;
-            docker image prune -a -f;
-            docker compose -f ${{ inputs.composeFile }} build --no-cache;
-            docker compose -f ${{ inputs.composeFile }} up -d
