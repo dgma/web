@@ -10,7 +10,7 @@ jobs:
   deploy_release:
     uses: "./.github/workflows/release.reusable.yml"
     with:
-      folder: web-dev
+      folder: app-dev
     secrets:
       serverSshPrivateKey: ${{ secrets.SERVER_SSH_KEY }}
       remoteHost: ${{ secrets.REMOTE_HOST }}

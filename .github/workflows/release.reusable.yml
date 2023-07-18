@@ -39,7 +39,7 @@ jobs:
           ARGS: "-rltgoDzvO"
           # docker and build are two separate folders
           SOURCE: "app"
-          TARGET: /root/${{ inputs.folder }}
+          TARGET: /root/www/${{ inputs.folder }}
           SCRIPT_BEFORE: |
             rm -rf ${{ inputs.folder }}
           SCRIPT_AFTER: |
