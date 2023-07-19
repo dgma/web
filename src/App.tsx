@@ -1,6 +1,3 @@
-// import reactLogo from "./assets/react.svg";
-// import viteLogo from "/vite.svg";
-
 import { RootLayout } from "@/components/Layouts";
 import { Wagmi } from "@/components/Wagmi";
 import { Header } from "@/components/Header";
@@ -13,7 +10,7 @@ function App() {
         <Header />
         <Main />
       </Wagmi>
-      <footer className="text-center">Private Policy</footer>
+      <footer className="text-center">Privacy Policy</footer>
     </RootLayout>
   );
 }

@@ -11,6 +11,7 @@
 ```bash
 //npm.pkg.github.com/:_authToken=<your-token>
 @safenook:registry=https://npm.pkg.github.com
+always-auth=true
 ```
 
 Replace `<your-token>` with your personal access token. You can read about how to create this token [here](https://docs.github.com/en/packages/learn-github-packages/introduction-to-github-packages#authenticating-to-github-packages).

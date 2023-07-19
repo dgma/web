@@ -4,7 +4,7 @@ import { Web3NetworkSwitch } from "@web3modal/react";
 
 export default function Header() {
   return (
-    <header className="h-[50px] w-100 bg-slate-500 flex justify-between">
+    <header className="h-[50px] w-100 flex justify-between">
       <div>
         <h1>Safenook</h1>
         <p>Non custodial vesting vaults</p>
