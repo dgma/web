@@ -10,7 +10,7 @@ export default function DisconnectedView({
 }: DisconnectedViewProps) {
   return (
     <div className="p-4 w-full mx-auto">
-      <div className="animate-pulse flex space-x-4 justify-center w-72 h-72 mx-auto">
+      <div className="flex space-x-4 justify-center w-72 h-72 mx-auto">
         <img src={WalletImg} alt="Wallet" />
       </div>
       <div className="text-center my-5">
