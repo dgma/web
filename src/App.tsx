@@ -10,7 +10,9 @@ function App() {
         <Header />
         <Main />
       </Wagmi>
-      <footer className="text-center">Privacy Policy</footer>
+      <footer className="text-center">
+        <a href="#">Privacy Policy</a>
+      </footer>
     </RootLayout>
   );
 }
