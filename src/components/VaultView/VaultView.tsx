@@ -1,6 +1,10 @@
 import { useMemo } from "react";
 import { useNetwork, type Address } from "wagmi";
-import { useGetVaultAddress, useCreateNewVault } from "@/hooks/useRegistry";
+import {
+  useGetVaultAddress,
+  useCreateNewVault,
+  useUnregisterVault,
+} from "@/hooks/useRegistry";
 import { AddressZero } from "@/constants";
 import { BaseButton } from "@/components/Buttons";
 import { Table } from "@/components/Table";
@@ -23,6 +27,7 @@ export default function VaultView() {
   );
 
   const { create } = useCreateNewVault(AddressZero, chain);
+  const { unregister } = useUnregisterVault(chain, vaultExists);
 
   return (
     <div className="container max-w-4xl mx-auto">
@@ -42,7 +47,9 @@ export default function VaultView() {
           <BaseButton className="mr-5" onClick={create} disabled={vaultExists}>
             + Create
           </BaseButton>
-          <BaseButton disabled={!vaultExists}>Unregister</BaseButton>
+          <BaseButton disabled={!vaultExists} onClick={unregister}>
+            Unregister
+          </BaseButton>
         </div>
       </div>
       <VaultStateContext.Provider value={vaultState}>

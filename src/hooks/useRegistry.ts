@@ -5,44 +5,42 @@ import {
   useWalletClient,
   type Address,
 } from "wagmi";
-import {
-  getContractAddress,
-  getContractsAddresses,
-} from "@/utils/getContractAddress";
-import { type VerifiedChain } from "@/constants";
+import { getContractsAddresses } from "@/utils/getContractAddress";
+import { type VerifiedChain, AddressZero } from "@/constants";
 
-import vestingVaultRegistryABI from "@safenook/dapp/abi/contracts/VestingVaultsRegistry.sol/VestingVaultsRegistry.json";
+import { VestingVaultsRegistryAbi } from "@safenook/dapp/abi/contracts/VestingVaultsRegistry.sol/VestingVaultsRegistryAbi";
 
-export function useGetVaultAddress(
-  network?: VerifiedChain,
-): Pick<ReturnType<typeof useContractRead>, "data" | "isLoading" | "isError"> {
+export function useGetVaultAddress(network?: VerifiedChain) {
   const { data: walletClient } = useWalletClient();
 
-  const vaultRegistryAddress = getContractAddress(
-    "VestingVaultsRegistry",
-    network,
-  );
+  const addresses = getContractsAddresses(network);
 
   return useContractRead({
-    address: vaultRegistryAddress,
-    abi: vestingVaultRegistryABI,
+    address: addresses.VestingVaultsRegistry,
+    abi: VestingVaultsRegistryAbi,
     functionName: "getVaultAddress",
     account: walletClient?.account,
+    args: [walletClient?.account.address || AddressZero],
   });
 }
 
-export function useCreateNewVault(recipient: Address, network?: VerifiedChain) {
+export function useCreateNewVault(
+  recipient: Address,
+  network?: VerifiedChain,
+  vaultExists?: boolean,
+) {
   const addresses = getContractsAddresses(network);
 
   const { config } = usePrepareContractWrite({
     address: addresses.VestingVaultsRegistry,
-    abi: vestingVaultRegistryABI,
+    abi: VestingVaultsRegistryAbi,
     functionName: "register",
     args: [
       addresses.Cancellable,
       recipient,
       addresses.RestoreAfterDelayCondition,
     ],
+    enabled: !vaultExists,
   });
 
   const { data, isLoading, isSuccess, write } = useContractWrite(config);
@@ -52,5 +50,32 @@ export function useCreateNewVault(recipient: Address, network?: VerifiedChain) {
     isLoading,
     isSuccess,
     create: () => write?.(),
+  };
+}
+
+export function useUnregisterVault(
+  network?: VerifiedChain,
+  vaultExists?: boolean,
+) {
+  const addresses = getContractsAddresses(network);
+
+  const { config } = usePrepareContractWrite({
+    address: addresses.VestingVaultsRegistry,
+    abi: VestingVaultsRegistryAbi,
+    functionName: "unregister",
+    // enable simulation only for existed vault
+    enabled: vaultExists,
+  });
+
+  const { data, isLoading, isSuccess, write } = useContractWrite(config);
+
+  return {
+    tx: data,
+    isLoading,
+    isSuccess,
+    unregister: () => {
+      console.log("unregister");
+      write?.();
+    },
   };
 }

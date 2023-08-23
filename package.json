@@ -11,7 +11,7 @@
     "prettier": "prettier --write pages/**/*.ts libs/**/*.ts app/**/*.ts"
   },
   "dependencies": {
-    "@safenook/dapp": "0.0.4-rocket",
+    "@safenook/dapp": "0.0.5-lite",
     "@web3modal/ethereum": "^2.7.0",
     "@web3modal/react": "^2.7.0",
     "classnames": "2.3.2",
