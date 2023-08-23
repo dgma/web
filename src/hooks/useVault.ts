@@ -7,7 +7,7 @@ import {
 } from "wagmi";
 import { parseEther } from "viem";
 import { getContractsAddresses } from "@/utils/getContractAddress";
-import { type VerifiedChain, AddressZero } from "@/constants";
+import { type VerifiedChain, AddressZero, YEAR_SEC } from "@/constants";
 
 import { RestoreAfterDelayConditionAbi } from "@safenook/dapp/abi/contracts/RestoreAfterDelayCondition.sol/RestoreAfterDelayConditionAbi";
 import { VestingVaultAbi } from "@safenook/dapp/abi/contracts/VestingVault.sol/VestingVaultAbi";
@@ -41,8 +41,6 @@ export function useGetRecoveryTimeout(network?: VerifiedChain) {
     account: walletClient?.account,
   });
 }
-
-const YEAR_SEC = 31560000;
 
 const getRecoveryTimeInSec = () => {
   const now_sec = Date.now() / 100;

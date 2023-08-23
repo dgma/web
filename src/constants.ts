@@ -16,3 +16,5 @@ export type SupportedNetworksConfigs = (typeof supportedNetworkConfigs)[number];
 export type ContractNames = (typeof contractNames)[number];
 export const AddressZero =
   "0x0000000000000000000000000000000000000000" as Address;
+
+export const YEAR_SEC = 315600000;
