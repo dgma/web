@@ -1,8 +1,27 @@
-import Image from "next/image";
+import { type FC } from "react";
+import LinkedIn from "/linkedin.svg";
+import Twitter from "/twitter.svg";
+import Telegram from "/telegram.svg";
 
-import LinkedIn from "./assets/linkedin.svg";
-import Twitter from "./assets/twitter.svg";
-import Telegram from "./assets/telegram.svg";
+type SocImgProps = {
+  src: string;
+  alt: string;
+  href?: string;
+};
+
+const SocialImg: FC<SocImgProps> = ({ src, alt, href = "#" }) => {
+  return (
+    <a href={href} target="_blank" rel="noreferrer">
+      <img
+        alt={alt}
+        height={40}
+        src={src}
+        width={40}
+        className="dark:fill-white fill-black"
+      />
+    </a>
+  );
+};
 
 const SocialIcons = () => {
   return (
@@ -10,27 +29,25 @@ const SocialIcons = () => {
       <h4 className="font-extrabold text-primary-500">Follow Us</h4>
       <ul className="flex flex-row gap-4">
         <li>
-          <a
+          <SocialImg
+            src={Twitter}
             href="https://twitter.com/DogmaLabs"
-            target="_blank"
-            rel="noreferrer"
-          >
-            <Image alt="Twitter" height={40} src={Twitter} width={40} />
-          </a>
+            alt="Twitter"
+          />
         </li>
         <li>
-          <a
+          <SocialImg
+            src={LinkedIn}
             href="https://www.linkedin.com/company/dogma-labs/"
-            target="_blank"
-            rel="noreferrer"
-          >
-            <Image height={40} alt="LinkedIn" src={LinkedIn} width={40} />
-          </a>
+            alt="LinkedIn"
+          />
         </li>
         <li>
-          <a href="https://t.me/dogmaprotocol" target="_blank" rel="noreferrer">
-            <Image height={40} alt="LinkedIn" src={Telegram} width={40} />
-          </a>
+          <SocialImg
+            src={Telegram}
+            href="https://t.me/dogmaprotocol"
+            alt="Telegram"
+          />
         </li>
       </ul>
     </div>

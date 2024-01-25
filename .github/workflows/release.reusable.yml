@@ -24,24 +24,16 @@ jobs:
     needs: reuse_build_and_validate
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Download build folder
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: release-ready-build
           path: app
-      - name: Deploy
-        uses: easingthemes/ssh-deploy@v4.1.8
+      - uses: easingthemes/ssh-deploy@v5.0.0
         with:
           SSH_PRIVATE_KEY: ${{ secrets.serverSshPrivateKey }}
+          SOURCE: "app/*"
           REMOTE_HOST: ${{ secrets.remoteHost }}
           REMOTE_USER: ${{ secrets.remoteUser }}
-          ARGS: "-rltgoDzvO"
-          # docker and build are two separate folders
-          SOURCE: "app/*"
-          TARGET: /web/${{ inputs.folder }}
-          SCRIPT_BEFORE: |
-            rm -rf /web/${{ inputs.folder }}; mkdir -p /web/${{ inputs.folder }}
-          SCRIPT_AFTER: |
-            ls -al
-            echo $RSYNC_STDOUT
+          TARGET: /root/web/${{ inputs.folder }}
