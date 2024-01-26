@@ -1,4 +1,5 @@
 import { type FC } from "react";
+import cn from "classnames";
 import LinkedIn from "/linkedin.svg";
 import Twitter from "/twitter.svg";
 import Telegram from "/telegram.svg";
@@ -14,19 +15,26 @@ const SocialImg: FC<SocImgProps> = ({ src, alt, href = "#" }) => {
     <a href={href} target="_blank" rel="noreferrer">
       <img
         alt={alt}
-        height={40}
+        height={25}
         src={src}
-        width={40}
+        width={25}
         className="dark:fill-white fill-black"
       />
     </a>
   );
 };
 
-const SocialIcons = () => {
+const SocialIcons: FC<{ invisible?: boolean }> = ({ invisible }) => {
   return (
-    <div className="flex flex-col items-center gap-y-6">
-      <h4 className="font-extrabold text-primary-500">Follow Us</h4>
+    <div
+      className={cn(
+        "flex flex-col items-center gap-y-6 pt-6 transition-opacity duration-500",
+        {
+          "opacity-0": invisible,
+          "opacity-1": !invisible,
+        },
+      )}
+    >
       <ul className="flex flex-row gap-4">
         <li>
           <SocialImg
