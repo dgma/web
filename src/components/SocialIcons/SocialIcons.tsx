@@ -2,7 +2,7 @@ import { type FC } from "react";
 import cn from "classnames";
 import LinkedIn from "/linkedin.svg";
 import Twitter from "/twitter.svg";
-import Telegram from "/telegram.svg";
+// import Telegram from "/telegram.svg";
 
 type SocImgProps = {
   src: string;
@@ -50,13 +50,13 @@ const SocialIcons: FC<{ invisible?: boolean }> = ({ invisible }) => {
             alt="LinkedIn"
           />
         </li>
-        <li>
+        {/* <li>
           <SocialImg
             src={Telegram}
             href="https://t.me/dogmaprotocol"
             alt="Telegram"
           />
-        </li>
+        </li> */}
       </ul>
     </div>
   );
